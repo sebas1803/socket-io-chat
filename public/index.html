@@ -12,7 +12,12 @@
     <script>"https://code.jquery.com/jquery-3.6.0.min.js"</script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io.connect();
+        const socket = io();
+        socket.emit('datos_usuarios', { correo: 'sebas43243@hotmail.com', usuario: 'Sebastian' });
+
+        socket.on('nuevo_usuario', function (datos) {
+            alert('Nuevo usuario conectado: ' + datos.user)
+        });
     </script>
     <h1>Mi primer WebSocket</h1>
 </body>
