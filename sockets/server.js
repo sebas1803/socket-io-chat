@@ -17,6 +17,11 @@ io.on('connect', function (socket) {
     socket.on('datos_usuarios', function (datos) {
         console.log('Usuario: ' + datos.usuario);
         console.log('Correo: ' + datos.correo);
-        io.emit('nuevo_usuario', {user: datos.usuario});
+        io.emit('nuevo_usuario', { user: datos.usuario });
+    });
+
+    socket.on('send_mensaje', function (datos) {
+        console.log(datos.usuario + ' envio un mensaje');
+        io.emit('nuevo_mensaje', { user: datos.usuario, mensaje: datos.mensaje });
     });
 });
