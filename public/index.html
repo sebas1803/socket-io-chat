@@ -5,16 +5,96 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SocketsIOChat</title>
+    <title>Chat con sockets</title>
 </head>
 
 <body>
-    <script>"https://code.jquery.com/jquery-3.6.0.min.js"</script>
+    <style>
+        #message-container {
+            margin: 10px auto;
+            width: 30%;
+            background: #89CFF0;
+            border: solid 1px black;
+            height: 400px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        p {
+            background-color: white;
+            padding: 5px;
+            border: solid 1px black;
+            margin: 5px 0px 10px 10px;
+            border-radius: 5px;
+            width: fit-content;
+        }
+
+        label {
+            margin: 10px 0px 0px 10px;
+        }
+    </style>
+    <div id="login-container">
+        <h1 style="text-align: center;">Ingresar al chat</h1>
+        <form style="display: flex; flex-direction:column; width: 250px; margin: auto;text-align: center;"
+            id="login_form">
+            <input style="margin: 5px;" type="text" name="" placeholder="Correo" id="correo">
+            <input style="margin: 5px;" type="text" name="" placeholder="Usuario" id="usuario">
+            <div>
+                <button style="width: 100px; margin: 5px;" type="button" onclick="Ingresar()">Ingresar</button>
+            </div>
+        </form>
+    </div>
+    <br><br><br>
+    <div id="chat-container">
+        <h1 style="text-align: center;">Chatcito</h1>
+        <div id="message-container">
+        </div>
+        <form id="chatbox" style="display: flex; align-items: center; justify-content: center;">
+            <textarea id="mensaje" placeholder="Escribe algo..." style="width: 400px;"></textarea>
+            <button style="margin-left: 5px; padding: 5px; background-color: cornflowerblue; color: white;"
+                type="submit" id="envia_mensaje" onclick="EnviarMensaje()">Enviar</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="socket-services.js"></script>
     <script>
-        const socket = io.connect();
+        $('#chat-container').hide();
+        $('#mensaje').keypress(function (e) {
+            mensaje = $('#mensaje').val();
+            if (e.which === 13 && !e.shiftKey) {
+                e.preventDefault();
+                if ($.trim($("#mensaje").val()) === "") {
+                    return false;
+                }
+                else {
+                    enviar_msj(mensaje, usuario);
+                    $('#mensaje').val("");
+                }
+            }
+        });
+        function Ingresar() {
+            correo = $('#login_form #correo').val();
+            usuario = $('#login_form #usuario').val();
+            login(correo, usuario);
+            $('#login-container').hide();
+            $('#chat-container').show();
+        }
+        function EnviarMensaje() {
+            mensaje = $('#mensaje').val();
+            $('#chatbox').submit(function (e) {
+                e.preventDefault();
+                if ($.trim($("#mensaje").val()) === "") {
+                    return false;
+                }
+                else {
+                    enviar_msj(mensaje, usuario);
+                    $('#mensaje').val("");
+                }
+            });
+        }
     </script>
-    <h1>Mi primer WebSocket</h1>
 </body>
 
 </html>
